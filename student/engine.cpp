@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < N; ++i) {
         x[i] = i * dx;
         if (v_uniform) {
-            h0[i] = h00;
+            h0[i] = x[i+1]-x[i]; // TODO: profil de récif selon la donnée du problème
         } else {
             h0[i] = 999.999; // TODO: profil de récif selon la donnée du problème
         }
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
     // TODO: calculer dt à partir de CFL
     double dt = 1.0; // MODIFIER
     if (impose_nsteps) {
-        dt  = 1.0; // MODIFIER, pourque on as 'nsteps' temporelle
+        dt  = 1.0; // MODIFIER, pour que on as 'nsteps' temporelle
         CFL = 1.0; // MODIFIER
     }
     cout << "dt = " << dt << ", max CFL = " << CFL << endl;
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
     // TODO: Initialiser fpast, fnow, beta2
     vector<double> fpast(N, 0.0), fnow(N, 0.0), fnext(N, 0.0), beta2(N, 1.0);
     for (int i = 0; i < N; ++i) {
-        beta2[i] = 1.0; // TODO: calculer beta^2 aux points de maillage
+        beta2[i] = pow(vel2[i] * dt / dx, 2); // TODO: calculer beta^2 aux points de maillage
         fnow[i]  = 0.;
         fpast[i] = 1.; // TODO: Implementer une condition initiale statique
     }
@@ -147,7 +147,17 @@ int main(int argc, char* argv[])
 
         // TODO: Implémenter les schémas A, B et C
         for (int i = 1; i < N - 1; ++i) {
-            fnext[i] = 0.0; // TODO: schéma A (puis B ou C si equation_type le demande)
+            if (equation_type == "A") {
+                fnext[i]=2*(1-beta2[i])*fnow[i]+beta2[i]*(fnow[i+1]+fnow[i-1])-fpast[i]; // TODO: schéma A (puis B ou C si equation_type le demande)
+            } else if (equation_type == "B") {
+                fnext[i]=2*fnow[i]-fpast[i]+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1])+pow(dt,2)/(2*pow(h0[i],2))+pow(dt,2)/(4*pow(h0[i],2))*(vel2[i]*(vel2[i+1]-vel2[i-1])*(fnow[i+1]-fnow[i-1])); // TODO: schéma B
+            } else if (equation_type == "C") {
+                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i+1]*pow(vel2[i+1],2)-2*fnow[i]*pow(vel2[i],2)+fnow[i-1]*pow(vel2[i-1],2)); // TODO: schéma C
+            } else {
+                cerr << "Type d'équation invalide: " << equation_type << endl;
+                return 1;
+            }
+            // TODO: schéma A (puis B ou C si equation_type le demande)
         }
 
         boundary_condition(fnext, fnow, A, om, t + dt, dt, beta2, bc_l, bc_r, N);
