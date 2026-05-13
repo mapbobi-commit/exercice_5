@@ -14,7 +14,11 @@ const double PI = 3.1415926535897932384626433832795028841971e0;
 // TODO: Implémenter l'énergie E(t) = integral_0^L f^2(x,t) dx
 double energy(const vector<double>& fnow, double dx)
 {
-    return 0.0; // TODO: remplacer
+    double E(0);    
+    for (i in fnow){
+        E+=i*i*dx;   
+    }
+    return E; // TODO: remplacer
 }
 
 // TODO: Implémenter les conditions aux bords (fixe, libre, sortie, excitation)
@@ -25,13 +29,16 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
 {
     // Bord gauche (x = 0)
     if (bc_l == "fixe") {
-        fnext[0] = 0.0;
+        fnext[0] = 0.0;  //Si on prend fixe a 0
     } else if (bc_l == "libre") {
-        fnext[0] = 0.0; // TODO: modifier pour la condition libre
+
+        fnext[0] = fnext[1]; // TODO: modifier pour la condition libre
     } else if (bc_l == "sortie") {
-        fnext[0] = 0.0; // TODO: modifier pour la condition de sortie
+        
+
+        fnext[0] = fnow[0]+sqrt(beta2)*(fnow[1]-fnow[0]) ; // TODO: modifier pour la condition de sortie
     } else if (bc_l == "harmonique") {
-        fnext[0] = 0.0; // TODO: modifier pour l'excitation sinusoidale f(0,t)=A*sin(om*t)
+        fnext[0] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(0,t)=A*sin(om*t)
     } else {
         cerr << "Condition au bord gauche invalide: " << bc_l << endl;
     }
@@ -40,11 +47,11 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
     if (bc_r == "fixe") {
         fnext[N-1] = 0.0;
     } else if (bc_r == "libre") {
-        fnext[N-1] = 0.0; // TODO: modifier pour la condition libre
+        fnext[N-1] = fnext[N-2]; // TODO: modifier pour la condition libre
     } else if (bc_r == "sortie") {
-        fnext[N-1] = 0.0; // TODO: modifier pour la condition de sortie
+        fnext[N-1] = fnow[N-1]+sqrt(beta2)*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
     } else if (bc_r == "harmonique") {
-        fnext[N-1] = 0.0; // TODO: modifier pour l'excitation sinusoidale f(L,t)=A*sin(om*t)
+        fnext[N-1] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(L,t)=A*sin(om*t)
     } else {
         cerr << "Condition au bord droit invalide: " << bc_r << endl;
     }
@@ -107,7 +114,8 @@ int main(int argc, char* argv[])
         if (v_uniform) {
             h0[i] = x[i+1]-x[i]; // TODO: profil de récif selon la donnée du problème
         } else {
-            h0[i] = 999.999; // TODO: profil de récif selon la donnée du problème
+            h0[i] = 999.999;   // TODO: profil de récif selon la donnée du problème
+
         }
         vel2[i] = g * h0[i];
     }
