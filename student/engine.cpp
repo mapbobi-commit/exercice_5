@@ -14,9 +14,9 @@ const double PI = 3.1415926535897932384626433832795028841971e0;
 // TODO: Implémenter l'énergie E(t) = integral_0^L f^2(x,t) dx
 double energy(const vector<double>& fnow, double dx)
 {
-    double E(0);    
-    for (i in fnow){
-        E+=i*i*dx;   
+    double E=0.0;    
+    for (const auto& val : fnow) {
+        E += val * val * dx;
     }
     return E; // TODO: remplacer
 }
@@ -36,7 +36,7 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
     } else if (bc_l == "sortie") {
         
 
-        fnext[0] = fnow[0]+sqrt(beta2)*(fnow[1]-fnow[0]) ; // TODO: modifier pour la condition de sortie
+        fnext[0] = fnow[0]+sqrt(beta2[0])*(fnow[1]-fnow[0]) ; // TODO: modifier pour la condition de sortie
     } else if (bc_l == "harmonique") {
         fnext[0] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(0,t)=A*sin(om*t)
     } else {
@@ -49,7 +49,7 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
     } else if (bc_r == "libre") {
         fnext[N-1] = fnext[N-2]; // TODO: modifier pour la condition libre
     } else if (bc_r == "sortie") {
-        fnext[N-1] = fnow[N-1]+sqrt(beta2)*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
+        fnext[N-1] = fnow[N-1]+sqrt(beta2[N-1])*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
     } else if (bc_r == "harmonique") {
         fnext[N-1] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(L,t)=A*sin(om*t)
     } else {
