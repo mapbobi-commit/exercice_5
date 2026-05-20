@@ -23,7 +23,7 @@ input_parameters = {
     'cb_gauche'      : 'harmonique',
     'A'              : 1.0,
     'om'             : 5.0,
-    'cb_droite'      : 'libre',
+    'cb_droite'      : 'fixe',
     'impose_nsteps'  : 'false',
     'nsteps'         : 100,
     'output'         : 'trivial_sortie',

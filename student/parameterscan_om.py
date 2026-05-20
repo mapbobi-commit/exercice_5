@@ -32,7 +32,8 @@ input_parameters = {
 }
 
 paramstr = 'om'
-variable_array=np.arange(5,6,0.1)
+variable_array=np.arange(0.5,6,0.05)
+
 
 
 outstr = (f"wave_tfin_{input_parameters['tfin']:.2g}"
