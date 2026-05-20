@@ -15,10 +15,10 @@ const double PI = 3.1415926535897932384626433832795028841971e0;
 double energy(const vector<double>& fnow, double dx)
 {
     double E=0.0;    
-    for (const auto& val : fnow) {
-        E += val * val * dx;
+    for (double val : fnow) {
+        E += val * val;
     }
-    return E; // TODO: remplacer
+    return E*dx; // TODO: remplacer
 }
 
 // TODO: Implémenter les conditions aux bords (fixe, libre, sortie, excitation)
@@ -49,7 +49,7 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
     } else if (bc_r == "libre") {
         fnext[N-1] = fnext[N-2]; // TODO: modifier pour la condition libre
     } else if (bc_r == "sortie") {
-        fnext[N-1] = fnow[N-1]+sqrt(beta2[N-1])*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
+        fnext[N-1] = fnow[N-1]-sqrt(beta2[N-1])*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
     } else if (bc_r == "harmonique") {
         fnext[N-1] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(L,t)=A*sin(om*t)
     } else {
@@ -112,20 +112,20 @@ int main(int argc, char* argv[])
     for (int i = 0; i < N; ++i) {
         x[i] = i * dx;
         if (v_uniform) {
-            h0[i] = x[i+1]-x[i]; // TODO: profil de récif selon la donnée du problème
+            h0[i] = h00; // TODO: profil de récif selon la donnée du problème
         } else {
             h0[i] = 999.999;   // TODO: profil de récif selon la donnée du problème
 
         }
-        vel2[i] = g * h0[i];
+        vel2[i] = g * h0[i]; 
     }
 
     double max_vel2 = *max_element(vel2.begin(), vel2.end());
     // TODO: calculer dt à partir de CFL
-    double dt = 1.0; // MODIFIER
+    double dt = CFL*dx/max_vel2; // MODIFIER
     if (impose_nsteps) {
-        dt  = 1.0; // MODIFIER, pour que on as 'nsteps' temporelle
-        CFL = 1.0; // MODIFIER
+        dt  = tfin/nsteps; // MODIFIER, pour que on as 'nsteps' temporelle
+        CFL = max_vel2 * dt / dx; // MODIFIER
     }
     cout << "dt = " << dt << ", max CFL = " << CFL << endl;
 
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < N; ++i) {
         beta2[i] = pow(vel2[i] * dt / dx, 2); // TODO: calculer beta^2 aux points de maillage
         fnow[i]  = 0.;
-        fpast[i] = 1.; // TODO: Implementer une condition initiale statique
+        fpast[i] = fnow[i]; // TODO: Implementer une condition initiale statique
     }
 
     // Time loop

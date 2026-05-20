@@ -18,7 +18,7 @@ equation_type = A                  // A, B, C are identical when v_uniform=true
 cb_gauche      = harmonique        // f(0,t) = A*sin(om*t)
 A              = 1.0
 om             = 5.0               // [rad/s]
-cb_droite      = sortie              // change to fixe, libre or sortie
+cb_droite      = fixe              // change to fixe, libre or sortie
 
 impose_nsteps  = false
 nsteps         = 100
