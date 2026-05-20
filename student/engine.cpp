@@ -34,8 +34,6 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
 
         fnext[0] = fnext[1]; // TODO: modifier pour la condition libre
     } else if (bc_l == "sortie") {
-        
-
         fnext[0] = fnow[0]+sqrt(beta2[0])*(fnow[1]-fnow[0]) ; // TODO: modifier pour la condition de sortie
     } else if (bc_l == "harmonique") {
         fnext[0] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(0,t)=A*sin(om*t)
@@ -49,7 +47,7 @@ void boundary_condition(vector<double>& fnext, const vector<double>& fnow,
     } else if (bc_r == "libre") {
         fnext[N-1] = fnext[N-2]; // TODO: modifier pour la condition libre
     } else if (bc_r == "sortie") {
-        fnext[N-1] = fnow[N-1]-sqrt(beta2[N-1])*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
+        fnext[N-1] = fnow[N-1]+sqrt(beta2[N-1])*(fnow[N-1]-fnow[N-2]); // TODO: modifier pour la condition de sortie
     } else if (bc_r == "harmonique") {
         fnext[N-1] = A*sin(om*t); // TODO: modifier pour l'excitation sinusoidale f(L,t)=A*sin(om*t)
     } else {
@@ -122,10 +120,11 @@ int main(int argc, char* argv[])
 
     double max_vel2 = *max_element(vel2.begin(), vel2.end());
     // TODO: calculer dt à partir de CFL
-    double dt = CFL*dx/max_vel2; // MODIFIER
+    double cmax=sqrt(max_vel2);
+    double dt = CFL*dx/cmax; // MODIFIER
     if (impose_nsteps) {
         dt  = tfin/nsteps; // MODIFIER, pour que on as 'nsteps' temporelle
-        CFL = max_vel2 * dt / dx; // MODIFIER
+        CFL = cmax * dt / dx; // MODIFIER
     }
     cout << "dt = " << dt << ", max CFL = " << CFL << endl;
 
@@ -138,7 +137,7 @@ int main(int argc, char* argv[])
     // TODO: Initialiser fpast, fnow, beta2
     vector<double> fpast(N, 0.0), fnow(N, 0.0), fnext(N, 0.0), beta2(N, 1.0);
     for (int i = 0; i < N; ++i) {
-        beta2[i] = pow(vel2[i] * dt / dx, 2); // TODO: calculer beta^2 aux points de maillage
+        beta2[i] = vel2[i] * pow(dt / dx, 2); // TODO: calculer beta^2 aux points de maillage
         fnow[i]  = 0.;
         fpast[i] = fnow[i]; // TODO: Implementer une condition initiale statique
     }
@@ -158,9 +157,9 @@ int main(int argc, char* argv[])
             if (equation_type == "A") {
                 fnext[i]=2*(1-beta2[i])*fnow[i]+beta2[i]*(fnow[i+1]+fnow[i-1])-fpast[i]; // TODO: schéma A (puis B ou C si equation_type le demande)
             } else if (equation_type == "B") {
-                fnext[i]=2*fnow[i]-fpast[i]+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1])+pow(dt,2)/(2*pow(h0[i],2))+pow(dt,2)/(4*pow(h0[i],2))*(vel2[i]*(vel2[i+1]-vel2[i-1])*(fnow[i+1]-fnow[i-1])); // TODO: schéma B
+                fnext[i]=2*fnow[i]-fpast[i]+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1])+pow(dt,2)/(2*pow(h0[i],2))*(sqrt(vel2[i])*(sqrt(vel2[i+1])-sqrt(vel2[i-1]))*(fnow[i+1]-fnow[i-1])); // TODO: schéma B
             } else if (equation_type == "C") {
-                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i+1]*pow(vel2[i+1],2)-2*fnow[i]*pow(vel2[i],2)+fnow[i-1]*pow(vel2[i-1],2)); // TODO: schéma C
+                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i+1]*vel2[i+1]-2*fnow[i]*vel2[i]+fnow[i-1]*vel2[i-1] ); // TODO: schéma C
             } else {
                 cerr << "Type d'équation invalide: " << equation_type << endl;
                 return 1;

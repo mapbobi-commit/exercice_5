@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 base = "/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_om_wave_tfin_2e+02_L_20_output_trivial_sortie/wave_tfin_2e+02_L_20_output_trivial_sortie_om_5.599999999999998"
+base='/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_tfin_wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie/wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie_tfin_1'
+base='/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_tfin_wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie/wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie_tfin_1'
+base='/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_tfin_wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie/wave_tfin_15_L_20_cb_gauche_harmonique_cb_droite_libre_output_trivial_sortie_tfin_1'
+
 
 x = np.loadtxt(base + "_x")
 vel2 = np.loadtxt(base + "_v")

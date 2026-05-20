@@ -7,7 +7,7 @@ executable     = 'engine.exe'
 input_filename = 'trivial.in'
 
 input_parameters = {
-    'tfin'           : 200.0,
+    'tfin'           : 15.0,
     'L'              : 20.0,
     'nx'             : 100,
     'CFL'            : 1.0,
@@ -23,7 +23,7 @@ input_parameters = {
     'cb_gauche'      : 'harmonique',
     'A'              : 1.0,
     'om'             : 5.0,
-    'cb_droite'      : 'fixe',
+    'cb_droite'      : 'libre',
     'impose_nsteps'  : 'false',
     'nsteps'         : 100,
     'output'         : 'trivial_sortie',
@@ -35,6 +35,8 @@ paramstr = 'tfin'
 
 outstr = (f"wave_tfin_{input_parameters['tfin']:.2g}"
           f"_L_{input_parameters['L']:.2g}"
+          f"_cb_gauche_{input_parameters['cb_gauche']}"
+          f"_cb_droite_{input_parameters['cb_droite']}"
           f"_output_{input_parameters['output']}")
 
 outdir = f"Scan_{paramstr}_{outstr}"
