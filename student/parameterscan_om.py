@@ -32,7 +32,7 @@ input_parameters = {
 }
 
 paramstr = 'om'
-variable_array=np.arange(0.5,6,0.05)
+variable_array=np.arange(0.5,6,0.01)
 
 
 
