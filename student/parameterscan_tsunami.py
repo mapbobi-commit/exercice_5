@@ -7,10 +7,10 @@ executable     = 'engine.exe'
 input_filename = 'trivial.in'
 
 input_parameters = {
-    'tfin'          : 40000.0,
+    'tfin'          : 8700.0,
     'L'             : 800e3,
-    'nx'            : 2000,
-    'CFL'           : 0.9,
+    'nx'            : 8000,
+    'CFL'           : 0.5,
     'v_uniform'     : 'false',
     'h00'           : 4000.0,
     'hL'            : 8000.0,

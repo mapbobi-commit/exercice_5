@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
                 fnext[i]=2*fnow[i]-fpast[i]+half_vel_2[i]+pow(dt,2)/(pow(h0[i],2))*(half_vel_2[i]*(fnow[i+1]-fnow[i]) - half_vel_2_neg[i]*(fnow[i]-fnow[i-1])); 
             }
             else if (equation_type == "C") {
-                fnext[i]=2*fnow[i]-fpast[i]+pow(dt/dx,2)/(pow(h0[i],2))*(fnow[i]*(vel2[i+1]-2*vel2[i]+vel2[i-1])+(vel2[i+1]-vel2[i-1])/2*(fnow[i+1]-fnow[i-1]))+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1]); // TODO: schéma C
+                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i]*(vel2[i+1]-2*vel2[i]+vel2[i-1])+(vel2[i+1]-vel2[i-1])/2*(fnow[i+1]-fnow[i-1]))+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1]); // TODO: schéma C
             } else {
                 cerr << "Type d'équation invalide: " << equation_type << endl;
                 return 1;

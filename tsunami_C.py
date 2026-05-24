@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 import glob
 import os
-folders = sorted(glob.glob("Results_tsunami_eq_A_*"))
+folders = sorted(glob.glob("Results_tsunami_eq_C_*"))
 
 for folder in folders:
 
@@ -109,48 +109,33 @@ for folder in folders:
 
 
 
-n_snap = 6
-idxs = np.linspace(0, len(t)-1, n_snap, dtype=int)
 
-plt.figure(figsize=(10, 5))
+    A = np.max(np.abs(f[:, valid]), axis=0)
+    h = v2[valid] / 9.81
+    mask = np.r_[True, np.diff(h) < 0]
+    h_clean = h[mask]
+    A_clean = A[mask]   #to have only one A value for each h, or else the reef goes up and down and maybe rflection effects or noise add to unprecision
 
-for i in idxs:
-     plt.plot(x/1000, f[i, :], label=f"t = {t[i]:.1f} s")
+    log_h = np.log(h_clean)
+    log_A = np.log(A_clean)
 
-plt.title(f"Wave snapshots - {folder}")
-plt.xlabel("x (km)")
-plt.ylabel("f(x,t)")
-plt.grid()
-plt.legend()
-plt.show()
+    coeff = np.polyfit(log_h, log_A, 1)
 
+    alpha = coeff[0]
+    C = np.exp(coeff[1])
 
-A = np.max(np.abs(f[:, valid]), axis=0)
-h = v2[valid] / 9.81
-mask = np.r_[True, np.diff(h) < 0]
-h_clean = h[mask]
-A_clean = A[mask]   #to have only one A value for each h, or else the reef goes up and down and maybe rflection effects or noise add to unprecision
-
-log_h = np.log(h_clean)
-log_A = np.log(A_clean)
-
-coeff = np.polyfit(log_h, log_A, 1)
-
-alpha = coeff[0]
-C = np.exp(coeff[1])
-
-A_fit = C * h_clean**alpha
+    A_fit = C * h_clean**alpha
 
 
-plt.figure()
+    plt.figure()
 
-plt.scatter(h_clean, A_clean, label="data", marker='.')
-plt.plot(h_clean, A_fit, label=f"fit: A ~ h^{alpha:.3f}")
+    plt.scatter(h_clean, A_clean, label="data", marker='.')
+    plt.plot(h_clean, A_fit, label=f"fit: A ~ h^{alpha:.3f}")
 
-plt.xlabel("h (m)")
-plt.ylabel("Amplitude")
-plt.title("Amplitude vs depth (Eq A)")
-plt.legend()
-plt.grid()
+    plt.xlabel("h (m)")
+    plt.ylabel("Amplitude")
+    plt.title("Amplitude vs depth (Eq A)")
+    plt.legend()
+    plt.grid()
 
-plt.show()
+    plt.show()
