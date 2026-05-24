@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
-#include "/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/common/ConfigFile.h"
+#include "ConfigFile.h"
 
 using namespace std;
 
@@ -112,7 +112,22 @@ int main(int argc, char* argv[])
         if (v_uniform) {
             h0[i] = h00; // TODO: profil de récif selon la donnée du problème
         } else {
-            h0[i] = 999.999;   // TODO: profil de récif selon la donnée du problème
+            if (x[i]<=xa){
+                h0[i]=hL;
+            }
+            if ((x[i]>=xa) and (x[i]<=xb)){
+                h0[i]=hL+(hR-hL)*pow(sin(PI*(x[i]-xa)/(2*(xb-xa))),2);
+            }
+            if ((x[i]>=xb) and (x[i]<=xc)){
+                h0[i]=hR;
+            }
+            if ((x[i]>=xc) and (x[i]<=xd)){
+                h0[i]=hR-(hR-hL)*pow(sin(PI*(xd-x[i])/(2*(xd-xc))),2);  //maybe change xd and xc here if the negative denominator is a problem(pas comme consigne)
+            }
+            if (x[i]>xd){
+                h0[i]=hL;
+            }
+            
 
         }
         vel2[i] = g * h0[i]; 
