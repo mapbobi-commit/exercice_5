@@ -4,6 +4,7 @@ from glob import glob
 import os
 
 pattern = "/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_om_wave_tfin_2e+02_L_20_output_trivial_sortie/wave_tfin_2e+02_L_20_output_trivial_sortie_om_*_en"
+pattern='/home/boriskiriakov/EPFL/BA4/Physique_Numerique/Exercise5_2026/Scan_om_wave_tfin_2e+02_L_20_output_trivial_sortie/wave_tfin_2e+02_L_20_output_trivial_sortie_om_*_en'
 
 files_en = sorted(glob(pattern))
 
@@ -35,5 +36,5 @@ plt.title(r"Maximum energy as a function of $\omega$")
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
 
-plt.savefig("Emax_vs_omega.png", dpi=300)
+plt.savefig("Emax_vs_omega1.png", dpi=300)
 plt.show()

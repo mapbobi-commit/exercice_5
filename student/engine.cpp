@@ -172,9 +172,16 @@ int main(int argc, char* argv[])
             if (equation_type == "A") {
                 fnext[i]=2*(1-beta2[i])*fnow[i]+beta2[i]*(fnow[i+1]+fnow[i-1])-fpast[i]; // TODO: schéma A (puis B ou C si equation_type le demande)
             } else if (equation_type == "B") {
-                fnext[i]=2*fnow[i]-fpast[i]+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1])+pow(dt,2)/(2*pow(h0[i],2))*(sqrt(vel2[i])*(sqrt(vel2[i+1])-sqrt(vel2[i-1]))*(fnow[i+1]-fnow[i-1])); // TODO: schéma B
-            } else if (equation_type == "C") {
-                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i+1]*vel2[i+1]-2*fnow[i]*vel2[i]+fnow[i-1]*vel2[i-1] ); // TODO: schéma C
+                fnext[i]=2*fnow[i]-fpast[i]+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1])+pow(dt,2)/(4*pow(h0[i],2))*(((vel2[i+1])-(vel2[i-1]))*(fnow[i+1]-fnow[i-1])); // TODO: schéma B
+            } else if (equation_type == "B_prime") {
+                vector<double> half_vel_2(N, 0.0);
+                half_vel_2[i] = (vel2[i+1] - vel2[i])/ 2;
+                vector<double> half_vel_2_neg(N, 0.0);
+                half_vel_2_neg[i] = (vel2[i] - vel2[i-1])/ 2;
+                fnext[i]=2*fnow[i]-fpast[i]+half_vel_2[i]+pow(dt,2)/(pow(h0[i],2))*(half_vel_2[i]*(fnow[i+1]-fnow[i]) - half_vel_2_neg[i]*(fnow[i]-fnow[i-1])); 
+            }
+            else if (equation_type == "C") {
+                fnext[i]=2*fnow[i]-fpast[i]+pow(dt,2)/(pow(h0[i],2))*(fnow[i]*(vel2[i+1]-2*vel2[i]+vel2[i-1])+(vel2[i+1]-vel2[i-1])/2*(fnow[i+1]-fnow[i-1]))+beta2[i]*(fnow[i+1]-2*fnow[i]+fnow[i-1]); // TODO: schéma C
             } else {
                 cerr << "Type d'équation invalide: " << equation_type << endl;
                 return 1;
